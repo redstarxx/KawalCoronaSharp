@@ -39,10 +39,10 @@ namespace KawalCoronaSharp
         }
 
         /// <summary>
-        /// Gets the international COVID statistics asynchronously.
+        /// Gets the COVID statistics for all available countries asynchronously.
         /// </summary>
-        /// <returns>A <see cref="List{T}" /> of <see cref="InternationalResponseEntity" /> objects containing the statistics of each country.</returns>
-        public async Task<List<InternationalResponseEntity>> GetInternationalDataAsync()
+        /// <returns>A <see cref="List{T}" /> of <see cref="InternationalResponseEntityData" /> objects containing the statistics of each country.</returns>
+        public async Task<List<InternationalResponseEntityData>> GetInternationalDataAsync()
         {
             string json = string.Empty;
             string endpoint = $"{Endpoints.BASE_URL}";
@@ -57,7 +57,30 @@ namespace KawalCoronaSharp
                 json = await reader.ReadToEndAsync();
             }
 
-            return JsonConvert.DeserializeObject<List<InternationalResponseEntity>>(json);
+            var deserializedResponse = JsonConvert.DeserializeObject<List<InternationalResponseEntity>>(json);
+
+            // Sort them into a new object, just to make it neat.
+            List<InternationalResponseEntityData> internationalResponseEntityDatas = new List<InternationalResponseEntityData>();
+
+            foreach (var country in deserializedResponse)
+            {
+                InternationalResponseEntityData countryData = new InternationalResponseEntityData()
+                {
+                    ObjectId = country.Attributes.ObjectId,
+                    Country = country.Attributes.Country,
+                    LastUpdated = country.Attributes.LastUpdated,
+                    Latitude = country.Attributes.Latitude,
+                    Longitude = country.Attributes.Longitude,
+                    Confirmed = country.Attributes.Confirmed,
+                    Deaths = country.Attributes.Deaths,
+                    Recovered = country.Attributes.Recovered,
+                    Active = country.Attributes.Active
+                };
+
+                internationalResponseEntityDatas.Add(countryData);
+            }
+
+            return internationalResponseEntityDatas;
         }
 
         /// <summary>
