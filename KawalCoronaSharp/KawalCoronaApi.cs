@@ -9,6 +9,9 @@ using KawalCoronaSharp.Entities;
 
 namespace KawalCoronaSharp
 {
+    /// <summary>
+    /// An implementation of the Kawal Corona API.
+    /// </summary>
     public class KawalCoronaApi
     {
         /// <summary>
@@ -55,6 +58,54 @@ namespace KawalCoronaSharp
             }
 
             return JsonConvert.DeserializeObject<List<InternationalResponseEntity>>(json);
+        }
+
+        /// <summary>
+        /// Gets the COVID statistics for the given country name.
+        /// </summary>
+        /// <param name="countryName">The name of the country.</param>
+        /// <returns>A <see cref="InternationalResponseEntityData" /> object containing the statistic of the given country name.</returns>
+        public async Task<InternationalResponseEntityData> GetCountryDataAsync(string countryName)
+        {
+            string json = string.Empty;
+            string endpoint = $"{Endpoints.BASE_URL}";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
+            request.AutomaticDecompression = DecompressionMethods.GZip;
+
+            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                json = await reader.ReadToEndAsync();
+            }
+
+            var deserializedResponse = JsonConvert.DeserializeObject<List<InternationalResponseEntity>>(json);
+
+            if (!deserializedResponse.Any(x => x.Attributes.Country == countryName))
+            {
+                throw new ArgumentException($"Name of country is not found in JSON response.", nameof(countryName));
+            }
+
+            else
+            {
+                deserializedResponse.RemoveAll(x => x.Attributes.Country != countryName);
+
+                InternationalResponseEntityData internationalResponseEntity = new InternationalResponseEntityData()
+                {
+                    ObjectId = deserializedResponse.First().Attributes.ObjectId,
+                    Country = deserializedResponse.First().Attributes.Country,
+                    LastUpdated = deserializedResponse.First().Attributes.LastUpdated,
+                    Latitude = deserializedResponse.First().Attributes.Latitude,
+                    Longitude = deserializedResponse.First().Attributes.Longitude,
+                    Confirmed = deserializedResponse.First().Attributes.Confirmed,
+                    Deaths = deserializedResponse.First().Attributes.Deaths,
+                    Recovered = deserializedResponse.First().Attributes.Recovered,
+                    Active = deserializedResponse.First().Attributes.Active
+                };
+
+                return internationalResponseEntity;
+            }
         }
     }
 }
