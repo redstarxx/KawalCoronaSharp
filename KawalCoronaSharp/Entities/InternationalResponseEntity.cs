@@ -5,7 +5,7 @@ namespace KawalCoronaSharp.Entities
     public class InternationalResponseEntityData
     {
         /// <summary>
-        /// Grts the object ID of the country.
+        /// Gets the object ID of the country.
         /// </summary>
         [JsonProperty("OBJECTID", NullValueHandling = NullValueHandling.Ignore)]
         public int ObjectId { get; internal set; }
