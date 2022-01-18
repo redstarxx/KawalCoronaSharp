@@ -42,7 +42,7 @@ namespace KawalCoronaSharp
         /// Gets the COVID statistics for all available countries asynchronously.
         /// </summary>
         /// <returns>A <see cref="List{T}" /> of <see cref="InternationalResponseEntityData" /> objects containing the statistics of each country.</returns>
-        public async Task<List<InternationalResponseEntityData>> GetInternationalDataAsync()
+        public async Task<List<InternationalResponseEntityData>> GetGlobalDataAsync()
         {
             string json = string.Empty;
             string endpoint = $"{Endpoints.BASE_URL}";
