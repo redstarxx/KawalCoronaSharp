@@ -4,6 +4,6 @@
     {
         public const string BASE_URL = "https://api.kawalcorona.com";
         public const string LOCAL = "/indonesia/";
-        public const string LOCAL_PROVINCES = "/provinsi/";
+        public const string LOCAL_PROVINCES = "/indonesia/provinsi/";
     }
 }
