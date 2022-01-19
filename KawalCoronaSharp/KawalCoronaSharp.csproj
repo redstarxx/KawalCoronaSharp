@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <Version>1.1.0</Version>
+    <Authors>RedStar</Authors>
+    <Product />
+    <Description>A C# wrapper for the Kawal Corona API.</Description>
+    <PackageTags>csharp, covid, covid-indonesia</PackageTags>
+    <OutputType>Library</OutputType>
+    <RepositoryUrl>https://github.com/redstarxx/KawalCoronaSharp</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
