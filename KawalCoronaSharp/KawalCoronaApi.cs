@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using KawalCoronaSharp.Entities;
+using KawalCoronaSharp.Enums;
 
 namespace KawalCoronaSharp
 {
@@ -20,18 +21,7 @@ namespace KawalCoronaSharp
         /// <returns>A <see cref="LocalResponseEntity" /> object containing the statistics.</returns>
         public async Task<LocalResponseEntity> GetIndonesianDataAsync()
         {
-            string json = string.Empty;
-            string endpoint = $"{Endpoints.BASE_URL}{Endpoints.LOCAL}";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-
-            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                json = await reader.ReadToEndAsync();
-            }
+            string json = await SendRequestAsync($"{Endpoints.BASE_URL}{Endpoints.LOCAL}");
 
             var deserializedResponse = JsonConvert.DeserializeObject<List<LocalResponseEntity>>(json);
 
@@ -44,18 +34,7 @@ namespace KawalCoronaSharp
         /// <returns>A <see cref="List{T}" /> of <see cref="InternationalResponseEntityData" /> objects containing the statistics of each country.</returns>
         public async Task<List<InternationalResponseEntityData>> GetGlobalDataAsync()
         {
-            string json = string.Empty;
-            string endpoint = $"{Endpoints.BASE_URL}";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-
-            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                json = await reader.ReadToEndAsync();
-            }
+            string json = await SendRequestAsync($"{Endpoints.BASE_URL}");
 
             var deserializedResponse = JsonConvert.DeserializeObject<List<InternationalResponseEntity>>(json);
 
@@ -90,18 +69,7 @@ namespace KawalCoronaSharp
         /// <returns>A <see cref="InternationalResponseEntityData" /> object containing the statistic of the given country name.</returns>
         public async Task<InternationalResponseEntityData> GetCountryDataAsync(string countryName)
         {
-            string json = string.Empty;
-            string endpoint = $"{Endpoints.BASE_URL}";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-
-            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                json = await reader.ReadToEndAsync();
-            }
+            string json = await SendRequestAsync($"{Endpoints.BASE_URL}");
 
             var deserializedResponse = JsonConvert.DeserializeObject<List<InternationalResponseEntity>>(json);
 
@@ -129,6 +97,27 @@ namespace KawalCoronaSharp
 
                 return internationalResponseEntity;
             }
+        }
+
+        /// <summary>
+        /// Sends a request to the endpoint.
+        /// </summary>
+        /// <param name="endpoint">The desired endpoint URL.</param>
+        /// <returns>A JSON string.</returns>
+        internal async Task<string> SendRequestAsync(string endpoint)
+        {
+            string json = string.Empty;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endpoint);
+            request.AutomaticDecompression = DecompressionMethods.GZip;
+
+            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                json = await reader.ReadToEndAsync();
+            }
+
+            return json;
         }
     }
 }
