@@ -100,6 +100,33 @@ namespace KawalCoronaSharp
         }
 
         /// <summary>
+        /// Gets the numbers for either global positives, recovered or deaths.
+        /// </summary>
+        /// <param name="dataType">The <see cref="DataType" /> to get.</param>
+        /// <returns>A <see cref="PartialResponseEntity" /> object containing the name and numbers of the requested <see cref="DataType" />.</returns>
+        public async Task<PartialResponseEntity> GetPartialResponseDataAsync(DataType dataType)
+        {
+            string json = string.Empty;
+
+            if (dataType is DataType.Positive)
+            {
+                json = await SendRequestAsync($"{Endpoints.BASE_URL}{Endpoints.GLOBAL_POSITIVE}");
+            }
+
+            else if (dataType is DataType.Recovered)
+            {
+                json = await SendRequestAsync($"{Endpoints.BASE_URL}{Endpoints.GLOBAL_RECOVERED}");
+            }
+
+            else if (dataType is DataType.Deaths)
+            {
+                json = await SendRequestAsync($"{Endpoints.BASE_URL}{Endpoints.GLOBAL_DEATHS}");
+            }
+
+            return JsonConvert.DeserializeObject<PartialResponseEntity>(json);
+        }
+
+        /// <summary>
         /// Sends a request to the endpoint.
         /// </summary>
         /// <param name="endpoint">The desired endpoint URL.</param>
