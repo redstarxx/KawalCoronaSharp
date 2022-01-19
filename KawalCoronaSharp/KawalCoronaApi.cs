@@ -43,6 +43,11 @@ namespace KawalCoronaSharp
 
             foreach (var country in deserializedResponse)
             {
+                if (country.Attributes.LastUpdated.ToString().Length > 10)
+                {
+                    country.Attributes.LastUpdated = Convert.ToInt64(country.Attributes.LastUpdated.ToString().Remove(10));
+                }
+
                 InternationalResponseEntityData countryData = new InternationalResponseEntityData()
                 {
                     ObjectId = country.Attributes.ObjectId,
