@@ -11,7 +11,7 @@ namespace KawalCoronaSharp.Entities
         public string Positives { get; internal set; }
 
         [JsonProperty("sembuh", NullValueHandling = NullValueHandling.Ignore)]
-        public string Healed { get; internal set; }
+        public string Recovered { get; internal set; }
 
         [JsonProperty("meninggal", NullValueHandling = NullValueHandling.Ignore)]
         public string Deceased { get; internal set; }

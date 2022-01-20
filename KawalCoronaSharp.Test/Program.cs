@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using KawalCoronaSharp.Entities;
+using KawalCoronaSharp.Enums;
 
 namespace KawalCoronaSharp.Test
 {
@@ -11,14 +13,22 @@ namespace KawalCoronaSharp.Test
 
             var response = await api.GetIndonesianDataAsync();
 
-            Console.WriteLine($"LOCAL RESPONSE:\nCountry: {response.Country}\nPositive: {response.Positives}\nHealed: {response.Healed}\nDeceased: {response.Deceased}\nHospitalized: {response.Hospitalised}");
+            Console.WriteLine($"LOCAL RESPONSE:\nCountry: {response.Country}\nPositive: {response.Positives}\nHealed: {response.Recovered}\nDeceased: {response.Deceased}\nHospitalized: {response.Hospitalised}");
 
-            var intResponse = await api.GetInternationalDataAsync();
+            var localResponse = await api.GetCountryDataAsync("Indonesia");
+
+            Console.WriteLine($"\n\nDeaths: {localResponse.Deaths}");
+
+            var intResponse = await api.GetGlobalDataAsync();
 
             foreach (var data in intResponse)
             {
-                Console.WriteLine(data.Attributes.Country);
+                Console.WriteLine(data.LastUpdated);
             }
+
+            var globalResp = await api.GetPartialResponseDataAsync(DataType.Positive);
+
+            Console.WriteLine(globalResp.Value);
 
             Console.ReadLine();
         }
