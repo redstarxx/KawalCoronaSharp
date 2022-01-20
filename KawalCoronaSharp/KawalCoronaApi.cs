@@ -72,15 +72,46 @@ namespace KawalCoronaSharp
         /// </summary>
         /// <param name="countryName">The name of the country.</param>
         /// <returns>A <see cref="InternationalResponseEntityData" /> object containing the statistic of the given country name.</returns>
-        public async Task<InternationalResponseEntityData> GetCountryDataAsync(string countryName)
+        public async Task<InternationalResponseEntityData> GetCountryDataAsync(string countryName, SearchMode searchMode)
         {
             string json = await SendRequestAsync($"{Endpoints.BASE_URL}");
 
             var deserializedResponse = JsonConvert.DeserializeObject<List<InternationalResponseEntity>>(json);
 
-            if (!deserializedResponse.Any(x => x.Attributes.Country == countryName))
+            if (!deserializedResponse.Any(x => x.Attributes.Country.ToLowerInvariant() == countryName.ToLowerInvariant()))
             {
-                throw new ArgumentException($"Name of country is not found in JSON response.", nameof(countryName));
+                if (searchMode is SearchMode.ClosestMatching)
+                {
+                    if (!deserializedResponse.Any(x => x.Attributes.Country.ToLowerInvariant().Contains(countryName.ToLowerInvariant())))
+                    {
+                        throw new ArgumentException($"Closest matching name of country is not found in JSON response.", nameof(countryName));
+                    }
+
+                    else
+                    {
+                        deserializedResponse.RemoveAll(x => !x.Attributes.Country.ToLowerInvariant().Contains(countryName));
+
+                        InternationalResponseEntityData internationalResponseEntity = new InternationalResponseEntityData()
+                        {
+                            ObjectId = deserializedResponse.First().Attributes.ObjectId,
+                            Country = deserializedResponse.First().Attributes.Country,
+                            LastUpdated = deserializedResponse.First().Attributes.LastUpdated,
+                            Latitude = deserializedResponse.First().Attributes.Latitude,
+                            Longitude = deserializedResponse.First().Attributes.Longitude,
+                            Confirmed = deserializedResponse.First().Attributes.Confirmed,
+                            Deaths = deserializedResponse.First().Attributes.Deaths,
+                            Recovered = deserializedResponse.First().Attributes.Recovered,
+                            Active = deserializedResponse.First().Attributes.Active
+                        };
+
+                        return internationalResponseEntity;
+                    }
+                }
+
+                else
+                {
+                    throw new ArgumentException($"Name of country is not found in JSON response.", nameof(countryName));
+                }
             }
 
             else
