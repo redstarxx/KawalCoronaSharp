@@ -8,7 +8,9 @@
     <Description>A C# wrapper for the Kawal Corona API.</Description>
     <PackageTags>csharp, covid, covid-indonesia</PackageTags>
     <OutputType>Library</OutputType>
-    <RepositoryUrl>https://github.com/redstarxx/KawalCoronaSharp</RepositoryUrl>
+    <ProjectUrlRepositoryUrl>https://github.com/redstarxx/KawalCoronaSharp</ProjectUrlRepositoryUrl>
+    <DocumentationFile>C:\Users\lenovo\source\repos\KawalCoronaSharp\KawalCoronaSharp\KawalCoronaSharp.xml</DocumentationFile>
+    <PackageProjectUrl>https://github.com/redstarxx/KawalCoronaSharp</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
