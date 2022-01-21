@@ -43,16 +43,12 @@ namespace KawalCoronaSharp
 
             foreach (var country in deserializedResponse)
             {
-                if (country.Attributes.LastUpdated.ToString().Length > 10)
-                {
-                    country.Attributes.LastUpdated = Convert.ToInt64(country.Attributes.LastUpdated.ToString().Remove(10));
-                }
-
                 InternationalResponseEntityData countryData = new InternationalResponseEntityData()
                 {
                     ObjectId = country.Attributes.ObjectId,
                     Country = country.Attributes.Country,
-                    LastUpdated = country.Attributes.LastUpdated,
+                    // I have no idea why the given unix timestamp has 3 additional zeros at the end.
+                    LastUpdated = Convert.ToInt64(country.Attributes.LastUpdated.ToString().Remove(10)),
                     Latitude = country.Attributes.Latitude,
                     Longitude = country.Attributes.Longitude,
                     Confirmed = country.Attributes.Confirmed,
@@ -71,6 +67,7 @@ namespace KawalCoronaSharp
         /// Gets the COVID statistics for the given country name.
         /// </summary>
         /// <param name="countryName">The name of the country.</param>
+        /// <param name="searchMode"> The search mode to use.</param>
         /// <returns>A <see cref="InternationalResponseEntityData" /> object containing the statistic of the given country name.</returns>
         public async Task<InternationalResponseEntityData> GetCountryDataAsync(string countryName, SearchMode searchMode)
         {
@@ -86,26 +83,6 @@ namespace KawalCoronaSharp
                     {
                         throw new ArgumentException($"Closest matching name of country is not found in JSON response.", nameof(countryName));
                     }
-
-                    else
-                    {
-                        deserializedResponse.RemoveAll(x => !x.Attributes.Country.ToLowerInvariant().Contains(countryName));
-
-                        InternationalResponseEntityData internationalResponseEntity = new InternationalResponseEntityData()
-                        {
-                            ObjectId = deserializedResponse.First().Attributes.ObjectId,
-                            Country = deserializedResponse.First().Attributes.Country,
-                            LastUpdated = deserializedResponse.First().Attributes.LastUpdated,
-                            Latitude = deserializedResponse.First().Attributes.Latitude,
-                            Longitude = deserializedResponse.First().Attributes.Longitude,
-                            Confirmed = deserializedResponse.First().Attributes.Confirmed,
-                            Deaths = deserializedResponse.First().Attributes.Deaths,
-                            Recovered = deserializedResponse.First().Attributes.Recovered,
-                            Active = deserializedResponse.First().Attributes.Active
-                        };
-
-                        return internationalResponseEntity;
-                    }
                 }
 
                 else
@@ -114,25 +91,23 @@ namespace KawalCoronaSharp
                 }
             }
 
-            else
+            deserializedResponse.RemoveAll(x => !x.Attributes.Country.ToLowerInvariant().Contains(countryName));
+
+            InternationalResponseEntityData internationalResponseEntity = new InternationalResponseEntityData()
             {
-                deserializedResponse.RemoveAll(x => x.Attributes.Country != countryName);
+                ObjectId = deserializedResponse.First().Attributes.ObjectId,
+                Country = deserializedResponse.First().Attributes.Country,
+                // I have no idea why the given unix timestamp has 3 additional zeros at the end.
+                LastUpdated = Convert.ToInt64(deserializedResponse.First().Attributes.LastUpdated.ToString().Remove(10)),
+                Latitude = deserializedResponse.First().Attributes.Latitude,
+                Longitude = deserializedResponse.First().Attributes.Longitude,
+                Confirmed = deserializedResponse.First().Attributes.Confirmed,
+                Deaths = deserializedResponse.First().Attributes.Deaths,
+                Recovered = deserializedResponse.First().Attributes.Recovered,
+                Active = deserializedResponse.First().Attributes.Active
+            };
 
-                InternationalResponseEntityData internationalResponseEntity = new InternationalResponseEntityData()
-                {
-                    ObjectId = deserializedResponse.First().Attributes.ObjectId,
-                    Country = deserializedResponse.First().Attributes.Country,
-                    LastUpdated = deserializedResponse.First().Attributes.LastUpdated,
-                    Latitude = deserializedResponse.First().Attributes.Latitude,
-                    Longitude = deserializedResponse.First().Attributes.Longitude,
-                    Confirmed = deserializedResponse.First().Attributes.Confirmed,
-                    Deaths = deserializedResponse.First().Attributes.Deaths,
-                    Recovered = deserializedResponse.First().Attributes.Recovered,
-                    Active = deserializedResponse.First().Attributes.Active
-                };
-
-                return internationalResponseEntity;
-            }
+            return internationalResponseEntity;
         }
 
         /// <summary>
