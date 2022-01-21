@@ -32,7 +32,7 @@ namespace KawalCoronaSharp
         /// Gets the COVID statistics for all available countries asynchronously.
         /// </summary>
         /// <returns>A <see cref="List{T}" /> of <see cref="InternationalResponseEntityData" /> objects containing the statistics of each country.</returns>
-        public async Task<List<InternationalResponseEntityData>> GetGlobalDataAsync()
+        public async Task<List<InternationalResponseEntityData>> GetAllCountriesDataAsync()
         {
             string json = await SendRequestAsync($"{Endpoints.BASE_URL}");
 
@@ -115,7 +115,7 @@ namespace KawalCoronaSharp
         /// </summary>
         /// <param name="dataType">The <see cref="DataType" /> to get.</param>
         /// <returns>A <see cref="PartialResponseEntity" /> object containing the name and numbers of the requested <see cref="DataType" />.</returns>
-        public async Task<PartialResponseEntity> GetPartialResponseDataAsync(DataType dataType)
+        public async Task<PartialResponseEntity> GetPartialGlobalDataAsync(DataType dataType)
         {
             string json = string.Empty;
 
