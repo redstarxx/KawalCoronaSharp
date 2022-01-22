@@ -2,6 +2,9 @@
 
 namespace KawalCoronaSharp.Entities
 {
+    /// <summary>
+    /// Represents a country's COVID-19 statistics.
+    /// </summary>
     public class InternationalResponseEntityData
     {
         /// <summary>
