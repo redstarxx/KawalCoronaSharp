@@ -25,7 +25,7 @@ namespace KawalCoronaSharp
 
             var deserializedResponse = JsonConvert.DeserializeObject<List<LocalResponseEntity>>(json);
 
-            return deserializedResponse.First();
+            return deserializedResponse.FirstOrDefault();
         }
 
         /// <summary>
@@ -91,20 +91,20 @@ namespace KawalCoronaSharp
                 }
             }
 
-            deserializedResponse.RemoveAll(x => !x.Attributes.Country.ToLowerInvariant().Contains(countryName));
+            deserializedResponse.RemoveAll(x => !x.Attributes.Country.ToLowerInvariant().Contains(countryName.ToLowerInvariant()));
 
             InternationalResponseEntityData internationalResponseEntity = new InternationalResponseEntityData()
             {
-                ObjectId = deserializedResponse.First().Attributes.ObjectId,
-                Country = deserializedResponse.First().Attributes.Country,
+                ObjectId = deserializedResponse.FirstOrDefault().Attributes.ObjectId,
+                Country = deserializedResponse.FirstOrDefault().Attributes.Country,
                 // I have no idea why the given unix timestamp has 3 additional zeros at the end.
-                LastUpdated = Convert.ToInt64(deserializedResponse.First().Attributes.LastUpdated.ToString().Remove(10)),
-                Latitude = deserializedResponse.First().Attributes.Latitude,
-                Longitude = deserializedResponse.First().Attributes.Longitude,
-                Confirmed = deserializedResponse.First().Attributes.Confirmed,
-                Deaths = deserializedResponse.First().Attributes.Deaths,
-                Recovered = deserializedResponse.First().Attributes.Recovered,
-                Active = deserializedResponse.First().Attributes.Active
+                LastUpdated = Convert.ToInt64(deserializedResponse.FirstOrDefault().Attributes.LastUpdated.ToString().Remove(10)),
+                Latitude = deserializedResponse.FirstOrDefault().Attributes.Latitude,
+                Longitude = deserializedResponse.FirstOrDefault().Attributes.Longitude,
+                Confirmed = deserializedResponse.FirstOrDefault().Attributes.Confirmed,
+                Deaths = deserializedResponse.FirstOrDefault().Attributes.Deaths,
+                Recovered = deserializedResponse.FirstOrDefault().Attributes.Recovered,
+                Active = deserializedResponse.FirstOrDefault().Attributes.Active
             };
 
             return internationalResponseEntity;
