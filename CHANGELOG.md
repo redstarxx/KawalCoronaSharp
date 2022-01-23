@@ -1,3 +1,6 @@
+# Version 1.2.1
+- Fix sequence contains no element when calling `GetIndonesianDataAsync` and `GetCountryDataAsync`.
+
 # Version 1.2.0
 - BREAKING: Change `GetGlobalDataAsync` & `GetPartialResponseDataAsync` method name to `GetAllCountriesDataAsync` & `GetPartialGlobalDataAsync`.
 - Include `SearchMode` enum in the `GetCountryDataAsync` method to fetch the exact or closest matching country name data.
