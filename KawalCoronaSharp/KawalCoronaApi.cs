@@ -83,6 +83,11 @@ namespace KawalCoronaSharp
                     {
                         throw new ArgumentException($"Closest matching name of country is not found in JSON response.", nameof(countryName));
                     }
+
+                    else
+                    {
+                        deserializedResponse.RemoveAll(x => !x.Attributes.Country.ToLowerInvariant().Contains(countryName.ToLowerInvariant()));
+                    }
                 }
 
                 else
@@ -91,7 +96,10 @@ namespace KawalCoronaSharp
                 }
             }
 
-            deserializedResponse.RemoveAll(x => !x.Attributes.Country.ToLowerInvariant().Contains(countryName.ToLowerInvariant()));
+            else
+            {
+                deserializedResponse.RemoveAll(x => x.Attributes.Country.ToLowerInvariant() != (countryName.ToLowerInvariant()));
+            }
 
             InternationalResponseEntityData internationalResponseEntity = new InternationalResponseEntityData()
             {

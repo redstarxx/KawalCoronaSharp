@@ -15,7 +15,7 @@ namespace KawalCoronaSharp.Test
 
             Console.WriteLine($"LOCAL RESPONSE:\nCountry: {response.Country}\nPositive: {response.Positives}\nRecovered: {response.Recovered}\nDeceased: {response.Deceased}\nHospitalized: {response.Hospitalised}");
 
-            var countryResponse = await api.GetCountryDataAsync("indo", SearchMode.ClosestMatching);
+            var countryResponse = await api.GetCountryDataAsync("Indonesia", SearchMode.Exact);
 
             Console.WriteLine($"\nData for {countryResponse.Country} (GetCountryDataAsync)\nLast updated: {new DateTime(1970, 1, 1, 0, 0, 0).AddSeconds(countryResponse.LastUpdated)}\nConfirmed: {countryResponse.Confirmed}\nActive: {countryResponse.Active}\nRecovered: {countryResponse.Recovered}\nDeaths: {countryResponse.Deaths}\nLatitude: {countryResponse.Latitude}\nLongitude: {countryResponse.Longitude}\nObject ID: {countryResponse.ObjectId}\n");
 
